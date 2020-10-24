@@ -14,7 +14,11 @@ def register(request):
         if request.method == "POST":
             form = UserRegisterForm(request.POST)
             if form.is_valid():
-                form.save()
+                user = form.save(commit=False)
+                user.save()
+                user.profile.country = form.cleaned_data.get("country")
+                user.profile.language = form.cleaned_data.get("language")
+                user.save()
                 username = form.cleaned_data.get("username")
                 messages.success(
                     request,
